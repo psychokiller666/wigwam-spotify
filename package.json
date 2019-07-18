@@ -1,0 +1,30 @@
+{
+  "name": "wigwam-spotify",
+  "version": "1.0.0",
+  "description": "使用ableton link协议，使spotinfy可以同步tempo，beat",
+  "author": "psychokiller",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
+    "build": "nuxt build",
+    "start": "cross-env NODE_ENV=production node server/index.js",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/auth": "^4.8.1",
+    "@nuxtjs/axios": "^5.5.4",
+    "cross-env": "^5.2.0",
+    "koa": "^2.6.2",
+    "koa-bodyparser": "^4.2.1",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^7.4.0",
+    "koa-session": "^5.12.2",
+    "nuxt-auth-refresh": "^1.1.0",
+    "nuxt-edge": "latest",
+    "spotify-web-api-node": "^4.0.0",
+    "tachyons": "^4.11.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  }
+}
