@@ -19,10 +19,12 @@
     "koa-logger": "^3.2.1",
     "koa-router": "^7.4.0",
     "koa-session": "^5.12.2",
+    "koa-websocket": "^6.0.0",
     "nuxt-auth-refresh": "^1.1.0",
     "nuxt-edge": "latest",
     "spotify-web-api-node": "^4.0.0",
-    "tachyons": "^4.11.1"
+    "tachyons": "^4.11.1",
+    "vue-simple-websocket": "^0.0.3"
   },
   "devDependencies": {
     "nodemon": "^1.18.9"

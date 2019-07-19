@@ -29,18 +29,13 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    { src:'~/plugins/web-socket', mode: 'client' }
   ],
   /*
   ** Nuxt.js modules
   */
   modules: [
-    ['~/modules/refresh-auth/', {
-      vuexNamespace: 'refreshAuth',
-      storageKey: 'my_refresh_token_key',
-      loginUrl: '/auth/token',
-      refreshTokenKey: 'refresh_token',
-      refreshPeriod: 1800
-    }],
+    ['~/modules/refresh-auth/'],
     '@nuxtjs/axios',
     '@nuxtjs/auth'
   ],
@@ -55,7 +50,7 @@ module.exports = {
         tokenType: 'Bearer'
       }
     },
-    plugins: ['~/plugins/refresh-auth']
+    plugins: [{ src:'~/plugins/refresh-auth', mode: 'client' }]
   },
   router: {
     middleware: ['auth']
@@ -65,9 +60,9 @@ module.exports = {
   * ENV
   */
   env: {
-    spotify_clinet_id: process.env.NODE_ENV === 'development' ? '750c898be9b24dc6ab0b10087e802b72' : process.env.SPOTIFY_CLIENT_ID,
-    spotify_clinet_secret: process.env.NODE_ENV === 'development' ? '144103e4d97141a781a09774f1362abe' : process.env.SPOTIFY_CLIENT_SECRET,
-    redirct_url: process.env.NODE_ENV === 'development' ? 'http://localhost:3000/callback' : process.env.SPOTIFY_REDIRECT_URL
+    spotify_clinet_id: process.env.NODE_ENV === 'development' ? '750c898be9b24dc6ab0b10087e802b72' : '750c898be9b24dc6ab0b10087e802b72',
+    spotify_clinet_secret: process.env.NODE_ENV === 'development' ? '144103e4d97141a781a09774f1362abe' : '144103e4d97141a781a09774f1362abe',
+    redirct_url: process.env.NODE_ENV === 'development' ? 'http://localhost:3000/callback' : 'http://localhost:3000/callback'
   },
   /*
   ** Build configuration

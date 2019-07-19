@@ -1,7 +1,4 @@
-export default (async ({ isClient ,app, store }) => {
-
-    if (!isClient) return false
-
+export default (async ({ app, store }) => {
     await (
         app.$auth.loggedIn ? app.$auth.fetchUserOnce().catch((e) => {
             console.error(e)

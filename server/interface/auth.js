@@ -1,17 +1,5 @@
 const Router = require('koa-router')
-
-const config = require('../../nuxt.config.js')
-const SpotifyWebApi = require('spotify-web-api-node')
-
-const client_id = config.env.spotify_clinet_id
-const client_secret = config.env.spotify_clinet_secret;
-const redirect_uri = config.env.redirct_url;
-
-const spotifyApi = new SpotifyWebApi({
-  clientId: client_id,
-  clientSecret: client_secret,
-  redirectUri: redirect_uri
-})
+const spotifyApi = require('../spotify')
 
 const router = new Router({
   prefix: '/auth'
@@ -27,9 +15,20 @@ router.get('/user', async ctx => {
 })
 
 router.get('/login', async ctx => {
-
-  let scopes = ['user-read-private', 'user-read-email']
-  let state = 'some-state-of-my-choice'
+  let scopes = ['streaming', 
+  'user-read-private',
+  'user-read-birthdate',
+  'user-read-email',
+  'user-read-recently-played',
+  'user-read-playback-state',
+  'user-modify-playback-state',
+  'user-library-modify',
+  'user-follow-modify',
+  'playlist-read-private',
+  'playlist-modify-public',
+  'playlist-modify-private',
+  'user-top-read']
+  let state = ctx.cookies.get('koa:sess.sig')
   ctx.body = {
     redirct: spotifyApi.createAuthorizeURL(scopes, state)
   }
@@ -59,12 +58,6 @@ router.post('/refresh', async ctx => {
     ctx.status = error.statusCode
     ctx.body = error
   })
-})
-
-router.get('/getSession', async ctx => {
-  ctx.body = {
-    session: ctx.session
-  }
 })
 
 module.exports = router

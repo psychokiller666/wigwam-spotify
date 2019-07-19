@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    Logging in...
+    <article class="mw5 center br3 pa3 pa4-ns mv3 ba b--black-10">
+      Logging in...
+    </article>
   </div>
 </template>
 
