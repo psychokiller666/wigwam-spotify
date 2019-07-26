@@ -11,6 +11,9 @@ module.exports = {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
     ],
+    script: [
+      { src: 'https://sdk.scdn.co/spotify-player.js', async: true}
+    ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
@@ -18,18 +21,21 @@ module.exports = {
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#fff' },
+  loading: { color: '#3AB954' },
   /*
   ** Global CSS
   */
   css: [
-    'tachyons/css/tachyons.css'
+    'tachyons/css/tachyons.css',
+    '@/assets/styles/_variables.sass'
   ],
   /*
   ** Plugins to load before mounting the App
   */
   plugins: [
-    { src:'~/plugins/web-socket', mode: 'client' }
+    { src: '~/plugins/web-socket', mode: 'client' },
+    { src: '~/plugins/vue-slider', mode: 'client' },
+    { src: '~/plugins/spotify', mode: 'client' }
   ],
   /*
   ** Nuxt.js modules
@@ -39,6 +45,11 @@ module.exports = {
     '@nuxtjs/axios',
     '@nuxtjs/auth'
   ],
+  axios: {
+    retry: {
+      retries: 5
+    }
+  },
   auth: {
     strategies: {
       local: {
@@ -50,7 +61,7 @@ module.exports = {
         tokenType: 'Bearer'
       }
     },
-    plugins: [{ src:'~/plugins/refresh-auth', mode: 'client' }]
+    plugins: [{ src: '~/plugins/refresh-auth', mode: 'client' }]
   },
   router: {
     middleware: ['auth']
@@ -68,6 +79,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
+    vendor: ['~/plugins/vue-slider'],
     /*
     ** You can extend webpack config here
     */

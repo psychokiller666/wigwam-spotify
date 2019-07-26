@@ -24,4 +24,16 @@ router.get('/getAudioFeaturesForTrack', async ctx => {
     })
 })
 
+router.get('/getAudioAnalysisForTrack', async ctx => {
+    const id = ctx.request.query.id
+    await spotifyApi.getAudioAnalysisForTrack(id).then(data => {
+        ctx.body = data.body
+    }).catch(error => {
+        ctx.status = error.statusCode
+        ctx.body = error
+    })
+})
+
+
+
 module.exports = router

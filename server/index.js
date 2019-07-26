@@ -8,13 +8,18 @@ const session = require('koa-session')
 const websockify = require('koa-websocket')
 
 // router
-const auth = require('./interface/auth.js')
+const auth = require('./interface/auth')
 const player = require('./interface/player')
+const link = require('./interface/link')
+const test = require('./interface/test')
+
 
 const app = new Koa()
 const websocket = websockify(app)
 
 const spotifyApi = require('./spotify')
+const tcp = require('./tcp')
+
 
 // Import and Set Nuxt.js options
 const config = require('../nuxt.config.js')
@@ -41,44 +46,42 @@ async function start() {
   app.use(logger((str, args) => {
     // redirect koa logger to other output pipe
     // default is process.stdout(by console.log function)
-    consola.info(str)
+    // consola.info(str)
   }))
 
   // body-parser
   app.use(bodyParser())
 
   // // websocket
-  websocket.ws.use((ctx, next) => {
-    ctx.session.currentId = null
-    setInterval(() => {
-      spotifyApi.getMyCurrentPlaybackState().then(data => {
-        if (Object.keys(data.body).length === 0) {
-          return false
-        } else {
-          ctx.websocket.send(JSON.stringify(data.body))
-          return data.body.item.id
-        }
-      }).then(id => {
-        // 获取Audio Analysis
-        if (ctx.session.currentId != id && id) {
-          ctx.session.currentId = id
-          spotifyApi.getAudioAnalysisForTrack(id).then(data => {
-            console.log(data.body)
-          }).catch(err => {
-            done(err)
-          })
-          // console.log(id)
-        }
-      }).catch(err=> {
-        done(err)
-        // consola.error(error)
-        // ctx.websocket.send(JSON.stringify(error))
-      })  
-    }, 1000)
-    // console.log(ctx.session.currentId)
-    // return `next` to pass the context (ctx) on to the next ws middleware
-    return next(ctx);
-  })
+  // websocket.ws.use((ctx, next) => {
+  //   ctx.session.currentId = null
+  //   setInterval(() => {
+  //     spotifyApi.getMyCurrentPlaybackState().then(data => {
+  //       if (Object.keys(data.body).length === 0) {
+  //         return false
+  //       } else {
+  //         ctx.websocket.send(JSON.stringify(data.body))
+  //         return data.body.item.id
+  //       }
+  //     }).then(id => {
+  //       // 获取Audio Analysis
+  //       if (ctx.session.currentId != id && id) {
+  //         ctx.session.currentId = id
+  //         console.log(id)
+  //         // spotifyApi.getAudioAnalysisForTrack(id).then(data => {
+  //         //   // console.log(data.body)
+  //         // }).catch(error => {
+  //         //   // consola.info('getAudioAnalysisForTrack error', error)
+  //         // })
+  //         // console.log(id)
+  //       }
+  //     }).catch(error => {
+  //       // consola.info('getMyCurrentPlaybackState error', error)
+  //     })  
+  //   }, 800)
+  //   // return `next` to pass the context (ctx) on to the next ws middleware
+  //   return next(ctx);
+  // })
 
   // session
   app.keys = ['some secret hurr']
@@ -96,6 +99,8 @@ async function start() {
   // router
   app.use(auth.routes()).use(auth.allowedMethods())
   app.use(player.routes()).use(player.allowedMethods())
+  app.use(link.routes()).use(link.allowedMethods())
+  app.use(test.routes()).use(test.allowedMethods())
 
   app.use((ctx) => {
     ctx.status = 200
@@ -104,17 +109,22 @@ async function start() {
     nuxt.render(ctx.req, ctx.res)
   })
 
+  // tcp
   app.listen(port, host)
-  websocket.listen(4000, host)
+  // websocket.listen(4000, host)
+  tcp.init()
+
+
+  // console.log(testjson.track.time_signature / testjson.track.time_signature_confidence)
 
   consola.ready({
     message: `Server listening on http://${host}:${port}`,
     badge: true
   })
-  consola.ready({
-    message: `Websocket listening on ws://${host}:4000`,
-    badge: true
-  })
+  // consola.ready({
+  //   message: `Websocket listening on ws://${host}:4000`,
+  //   badge: true
+  // })
   
 }
 

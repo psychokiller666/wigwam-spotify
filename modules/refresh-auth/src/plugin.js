@@ -62,7 +62,7 @@ const actions = {
         }
       )
       
-      this.$auth.setToken('local', responseData[ACCESS_TOKEN_KEY])
+      this.$auth.setToken('local', 'Bearer ' + responseData[ACCESS_TOKEN_KEY])
       this.$axios.setHeader(
         'Authorization',
         'Bearer ' + responseData[ACCESS_TOKEN_KEY]

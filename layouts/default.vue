@@ -1,6 +1,6 @@
 <template>
   <article class="athelas">
-    <div class="vh-100 dt w-100 tc bg-dark-gray white cover" style="background:url(http://mrmrs.github.io/photos/u/009.jpg) no-repeat center;">
+    <div class="vh-100 dt w-100 tc bg-dark-gray white cover wigwam-bg">
       <div class="dtc v-mid">
         <header class="white-70">
           <h2 class="f6 fw1 ttu tracked mb2 lh-title">作者：{{ config.author }}</h2>
@@ -29,3 +29,9 @@ export default {
   }
 }
 </script>
+
+<style>
+  .wigwam-bg {
+    background:url(https://s2.ax1x.com/2019/07/24/eA6TtH.jpg) no-repeat center;
+  }
+</style>
