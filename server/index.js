@@ -53,35 +53,25 @@ async function start() {
   app.use(bodyParser())
 
   // // websocket
-  // websocket.ws.use((ctx, next) => {
-  //   ctx.session.currentId = null
-  //   setInterval(() => {
-  //     spotifyApi.getMyCurrentPlaybackState().then(data => {
-  //       if (Object.keys(data.body).length === 0) {
-  //         return false
-  //       } else {
-  //         ctx.websocket.send(JSON.stringify(data.body))
-  //         return data.body.item.id
-  //       }
-  //     }).then(id => {
-  //       // 获取Audio Analysis
-  //       if (ctx.session.currentId != id && id) {
-  //         ctx.session.currentId = id
-  //         console.log(id)
-  //         // spotifyApi.getAudioAnalysisForTrack(id).then(data => {
-  //         //   // console.log(data.body)
-  //         // }).catch(error => {
-  //         //   // consola.info('getAudioAnalysisForTrack error', error)
-  //         // })
-  //         // console.log(id)
-  //       }
-  //     }).catch(error => {
-  //       // consola.info('getMyCurrentPlaybackState error', error)
-  //     })  
-  //   }, 800)
-  //   // return `next` to pass the context (ctx) on to the next ws middleware
-  //   return next(ctx);
-  // })
+  websocket.ws.use((ctx, next) => {
+
+    ctx.websocket.on('message', function(message) {
+      // do something with the message from client
+      const instruction = JSON.parse(message)
+      // console.log(instruction)
+      switch(instruction.type) {
+        case 'link':
+          tcp.client.send(`${instruction.data} \n`)
+          ctx.websocket.send(message)
+        break
+
+        default:
+          tcp.client.send(`status \n`)
+      }
+    })
+    // return `next` to pass the context (ctx) on to the next ws middleware
+    return next(ctx);
+  })
 
   // session
   app.keys = ['some secret hurr']
@@ -111,7 +101,7 @@ async function start() {
 
   // tcp
   app.listen(port, host)
-  // websocket.listen(4000, host)
+  websocket.listen(4000, host)
   tcp.init()
 
 
@@ -121,10 +111,10 @@ async function start() {
     message: `Server listening on http://${host}:${port}`,
     badge: true
   })
-  // consola.ready({
-  //   message: `Websocket listening on ws://${host}:4000`,
-  //   badge: true
-  // })
+  consola.ready({
+    message: `Websocket listening on ws://${host}:4000`,
+    badge: true
+  })
   
 }
 

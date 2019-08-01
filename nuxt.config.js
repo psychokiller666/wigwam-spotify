@@ -35,6 +35,7 @@ module.exports = {
   plugins: [
     { src: '~/plugins/web-socket', mode: 'client' },
     { src: '~/plugins/vue-slider', mode: 'client' },
+    { src: '~/plugins/vue-sparklines', mode: 'client' },
     { src: '~/plugins/spotify', mode: 'client' }
   ],
   /*
@@ -79,7 +80,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    vendor: ['~/plugins/vue-slider'],
+    vendor: ['~/plugins/vue-slider', '~/plugins/vue-sparklines', '~/plugins/spotify'],
     /*
     ** You can extend webpack config here
     */

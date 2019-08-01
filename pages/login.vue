@@ -10,13 +10,14 @@
 </template>
 
 <script>
+
 export default {
-  methods: {
-    login () {
-      this.$axios.get('/auth/login').then(res => {
-        window.location.href = res.data.redirct
-      })
-    }
-  }
+    methods: {
+        login () {
+            this.$axios.get('/auth/login').then(res => {
+              window.location.href = res.data.redirct
+          })
+        }
+    },
 }
 </script>
