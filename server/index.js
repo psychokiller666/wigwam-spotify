@@ -6,6 +6,7 @@ const logger = require('koa-logger')
 const bodyParser = require('koa-bodyparser')
 const session = require('koa-session')
 const websockify = require('koa-websocket')
+const udpPort = require('./osc')
 
 // router
 const auth = require('./interface/auth')
@@ -17,7 +18,6 @@ const test = require('./interface/test')
 const app = new Koa()
 const websocket = websockify(app)
 
-const spotifyApi = require('./spotify')
 const tcp = require('./tcp')
 
 
@@ -102,7 +102,8 @@ async function start() {
   // tcp
   app.listen(port, host)
   websocket.listen(4000, host)
-  tcp.init()
+  // tcp.init()
+  udpPort.open()
 
 
   // console.log(testjson.track.time_signature / testjson.track.time_signature_confidence)

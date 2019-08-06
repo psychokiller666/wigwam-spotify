@@ -1,3 +1,5 @@
+const underworld = require('../underworld.json')
+const underworld_f = require('../underworld_f.json')
 
 export const state = () => ({
     playLoaded: false,
@@ -59,10 +61,10 @@ export const actions = {
                 type: 'SET_CURRENT_FEATURES'
             }).then(() => {
                 // 发送bpm
-                this.dispatch('link/REQ_LINK_BPM', state.currentFeatures.tempo).then(() => {
-                    // force-beat-at-time
-                    this.dispatch('link/REQ_FORCE_BEAT')
-                })
+                // this.dispatch('link/REQ_LINK_BPM', state.currentFeatures.tempo).then(() => {
+                //     // force-beat-at-time
+                //     this.dispatch('link/REQ_FORCE_BEAT')
+                // })
                 
             }).then(() => {
                 dispatch('REQ_ANALYSIS', {
@@ -88,26 +90,80 @@ export const actions = {
         }
 
         // 暂停播放
-        if (state.playback.paused != this.state.link.playing) {
-            this.dispatch()
-        }
+        // if (state.playback.paused != this.state.link.playing) {
+        //     this.dispatch()
+        // }
 
         // console.log(this)
 
-        // sections
-        if (state.currentAnalysis && state.axiosLoaded && !state.playback.paused) {
-            for (let item of state.currentAnalysis.sections) {
-                if (Number((item.start + item.duration).toFixed(3)) > position) {
-                    this.dispatch('link/REQ_LINK_BPM', item.tempo).then(res => {
-                        if (typeof res === 'undefined') {
-                            // force-beat-at-time
-                            this.dispatch('link/REQ_FORCE_BEAT')   
-                        }
-                    })
+        // timeline
+        // console.log(value)
+        // if (value.paused) return false
+
+        if (state.currentAnalysis && !value.paused) {
+            console.log('position:', position)
+            // schedule
+            // for (let item of underworld.segments) {
+            //     if (item.confidence > 0.01) {
+            //         if (position < item.start) {
+            //             console.log('segments:', item)
+            //             break
+            //         }
+            //     }
+            // }
+            for (let index in underworld.segments) {
+                if (position < underworld.segments[index].start) {
+                    console.log('segments:',  underworld.segments[index])
+                    // console.log(index)
                     break
                 }
             }
+            // sections
+            for (let item of underworld.sections) {
+                if (item.start > position) {
+                    console.log('sections', item)
+                    break
+                }
+            }
+            // tatums
+            for (let item of underworld.tatums) {
+                if (item.start > position) {
+                    console.log('tatums', item)
+                    break
+                }
+            }
+            // beats
+            for (let item of underworld.beats) {
+                if (item.start > position) {
+                    console.log('beats', item)
+                    break
+                }
+            }
+            // bars
+            for (let item of underworld.bars) {
+                if (item.start > position) {
+                    console.log('bars', item)
+                    break
+                }
+            }
+            console.log('------------')
         }
+
+        
+        // sections
+        // if (state.currentAnalysis && state.axiosLoaded && !state.playback.paused) {
+        //     for (let item of state.currentAnalysis.sections) {
+        //         if (Number((item.start + item.duration).toFixed(3)) > position) {
+        //             this.dispatch('link/REQ_LINK_BPM', item.tempo).then(res => {
+        //                 if (typeof res === 'undefined') {
+        //                     // force-beat-at-time
+        //                     this.dispatch('link/REQ_FORCE_BEAT')   
+        //                 }
+        //             })
+        //             break
+        //         }
+        //     }
+        // }
 
         // beats
         // if (state.currentAnalysis && state.axiosLoaded && !state.playback.paused) {
