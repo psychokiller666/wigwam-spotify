@@ -36,7 +36,8 @@ module.exports = {
     { src: '~/plugins/web-socket', mode: 'client' },
     { src: '~/plugins/vue-slider', mode: 'client' },
     { src: '~/plugins/vue-sparklines', mode: 'client' },
-    { src: '~/plugins/spotify', mode: 'client' }
+    { src: '~/plugins/spotify', mode: 'client' },
+    { src: '~/plugins/osc', mode: 'client' }
   ],
   /*
   ** Nuxt.js modules
@@ -80,7 +81,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    vendor: ['~/plugins/vue-slider', '~/plugins/vue-sparklines', '~/plugins/spotify'],
+    vendor: ['~/plugins/vue-slider', '~/plugins/vue-sparklines', '~/plugins/spotify', '~/plugins/osc'],
     /*
     ** You can extend webpack config here
     */

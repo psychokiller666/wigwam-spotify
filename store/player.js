@@ -1,5 +1,3 @@
-const underworld = require('../underworld.json')
-const underworld_f = require('../underworld_f.json')
 
 export const state = () => ({
     playLoaded: false,
@@ -51,8 +49,6 @@ export const actions = {
      */
     PONG_PLAYBACK ({state, dispatch, commit}, value) {
         commit('SET_PLAYBACK_STATE', value)
-        const position = value.position / this.$webPlaybackSdkProps().playerRefreshRateMs
-
         // currentFeatures
         // currentAnalysis
         if (state.currentFeatures.id != state.playback.track_window.current_track.id && state.axiosLoaded) {
@@ -61,15 +57,15 @@ export const actions = {
                 type: 'SET_CURRENT_FEATURES'
             }).then(() => {
                 // 发送bpm
-                // this.dispatch('link/REQ_LINK_BPM', state.currentFeatures.tempo).then(() => {
-                //     // force-beat-at-time
-                //     this.dispatch('link/REQ_FORCE_BEAT')
-                // })
-                
+                this.dispatch('osc/SEND_TEMPO', state.currentFeatures.tempo)
+                this.dispatch('osc/SEND_PAUSE')
             }).then(() => {
                 dispatch('REQ_ANALYSIS', {
                     id: state.playback.track_window.current_track.id,
                     type: 'SET_CURRENT_ANALYSIS'
+                }).then(() => {
+                    // 启动定时器
+                    this.dispatch('osc/REQ_TIMER_START')
                 })
             })
         }
@@ -100,54 +96,54 @@ export const actions = {
         // console.log(value)
         // if (value.paused) return false
 
-        if (state.currentAnalysis && !value.paused) {
-            console.log('position:', position)
-            // schedule
-            // for (let item of underworld.segments) {
-            //     if (item.confidence > 0.01) {
-            //         if (position < item.start) {
-            //             console.log('segments:', item)
-            //             break
-            //         }
-            //     }
-            // }
-            for (let index in underworld.segments) {
-                if (position < underworld.segments[index].start) {
-                    console.log('segments:',  underworld.segments[index])
-                    // console.log(index)
-                    break
-                }
-            }
-            // sections
-            for (let item of underworld.sections) {
-                if (item.start > position) {
-                    console.log('sections', item)
-                    break
-                }
-            }
-            // tatums
-            for (let item of underworld.tatums) {
-                if (item.start > position) {
-                    console.log('tatums', item)
-                    break
-                }
-            }
-            // beats
-            for (let item of underworld.beats) {
-                if (item.start > position) {
-                    console.log('beats', item)
-                    break
-                }
-            }
-            // bars
-            for (let item of underworld.bars) {
-                if (item.start > position) {
-                    console.log('bars', item)
-                    break
-                }
-            }
-            console.log('------------')
-        }
+        // if (state.currentAnalysis && !value.paused) {
+        //     console.log('position:', position)
+        //     // schedule
+        //     // for (let item of underworld.segments) {
+        //     //     if (item.confidence > 0.01) {
+        //     //         if (position < item.start) {
+        //     //             console.log('segments:', item)
+        //     //             break
+        //     //         }
+        //     //     }
+        //     // }
+        //     for (let index in underworld.segments) {
+        //         if (position < underworld.segments[index].start) {
+        //             console.log('segments:',  underworld.segments[index])
+        //             // console.log(index)
+        //             break
+        //         }
+        //     }
+        //     // sections
+        //     for (let item of underworld.sections) {
+        //         if (item.start > position) {
+        //             console.log('sections', item)
+        //             break
+        //         }
+        //     }
+        //     // tatums
+        //     for (let item of underworld.tatums) {
+        //         if (item.start > position) {
+        //             console.log('tatums', item)
+        //             break
+        //         }
+        //     }
+        //     // beats
+        //     for (let item of underworld.beats) {
+        //         if (item.start > position) {
+        //             console.log('beats', item)
+        //             break
+        //         }
+        //     }
+        //     // bars
+        //     for (let item of underworld.bars) {
+        //         if (item.start > position) {
+        //             console.log('bars', item)
+        //             break
+        //         }
+        //     }
+        //     console.log('------------')
+        // }
 
         
         // sections
@@ -182,7 +178,7 @@ export const actions = {
     /**
      * 请求 FEATURES
      */
-    async REQ_FEATURES ({ commit}, {
+    async REQ_FEATURES ({ commit }, {
         id: id,
         type: type  // SET_CURRENT_FEATURES, SET_NEXT_FEATURES
     }) {
@@ -208,14 +204,17 @@ export const actions = {
             commit('SET_AXIOS_LOADED', true)
         })
     },
+    
+    /**
+     * 请求当前播放
+     */
+    async REQ_CURRENT () {
+        return await this.$axios.get(`/player/getMyCurrentPlaybackState`)
+    },
 
-
-    // async REQ_LINK_BPM ({ }, tempo) {
-    //     await this.$axios.put('/link/bpm', {
-    //         tempo: tempo
-    //     })
-    // },
-
+    /**
+     * 设置当前设备
+     */
     async REQ_PLAYER_PLAY ({ }, id) {
         await this.$axios.put('https://api.spotify.com/v1/me/player', {
             device_ids: [id],

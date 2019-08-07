@@ -40,8 +40,6 @@ router.post('/token', async ctx => {
     spotifyApi.setAccessToken(data.body.access_token)
     spotifyApi.setRefreshToken(data.body.refresh_token)
 
-    ctx.session.access_token = data.body.access_token
-    ctx.session.refresh_token = data.body.refresh_token
     ctx.body = data.body
   }).catch(error => {
     ctx.status = error.statusCode
@@ -52,7 +50,6 @@ router.post('/token', async ctx => {
 router.post('/refresh', async ctx => {
   await spotifyApi.refreshAccessToken().then(data => {
     spotifyApi.setAccessToken(data.body.access_token)
-    ctx.session.access_token = data.body.access_token
     ctx.body = data.body
   }).catch(error => {
     ctx.status = error.statusCode

@@ -4,21 +4,36 @@ const { Nuxt, Builder } = require('nuxt-edge')
 
 const logger = require('koa-logger')
 const bodyParser = require('koa-bodyparser')
-const session = require('koa-session')
-const websockify = require('koa-websocket')
-const udpPort = require('./osc')
+
+const osc = require('osc')
+const WebSocket = require("ws")
 
 // router
 const auth = require('./interface/auth')
 const player = require('./interface/player')
 const link = require('./interface/link')
-const test = require('./interface/test')
-
 
 const app = new Koa()
-const websocket = websockify(app)
 
-const tcp = require('./tcp')
+// osc
+const udpPort = new osc.UDPPort({
+  localAddress: '0.0.0.0',
+  localPort: 57121,
+  remoteAddress: '0.0.0.0',
+  remotePort: 57110
+})
+
+udpPort.on('ready', function () {
+  consola.ready({
+    message: `Broadcasting OSC over UDP to ${udpPort.options.remoteAddress}:${udpPort.options.remotePort}`,
+    badge: true
+  })
+})
+
+udpPort.on('bundle', function (oscBundle, timeTag, info) {
+  // console.log("An OSC bundle just arrived for time tag", timeTag, ":", oscBundle)
+  // console.log("Remote info is: ", info)
+})
 
 
 // Import and Set Nuxt.js options
@@ -42,55 +57,35 @@ async function start() {
     await nuxt.ready()
   }
 
+
   // log
   app.use(logger((str, args) => {
     // redirect koa logger to other output pipe
-    // default is process.stdout(by console.log function)
     // consola.info(str)
   }))
 
   // body-parser
   app.use(bodyParser())
 
-  // // websocket
-  websocket.ws.use((ctx, next) => {
-
-    ctx.websocket.on('message', function(message) {
-      // do something with the message from client
-      const instruction = JSON.parse(message)
-      // console.log(instruction)
-      switch(instruction.type) {
-        case 'link':
-          tcp.client.send(`${instruction.data} \n`)
-          ctx.websocket.send(message)
-        break
-
-        default:
-          tcp.client.send(`status \n`)
-      }
-    })
-    // return `next` to pass the context (ctx) on to the next ws middleware
-    return next(ctx);
+  // websocket
+  const ws = new WebSocket.Server({
+    port: 4000
   })
+  ws.on('connection', (socket) => {
+    const socketPort = new osc.WebSocketPort({
+      socket: socket,
+      metadata: true
+    })
 
-  // session
-  app.keys = ['some secret hurr']
-  const CONFIG = {
-     key: 'koa:sess',   //cookie key (default is koa:sess)
-     maxAge: 86400000,  // cookie的过期时间 maxAge in ms (default is 1 days)
-     overwrite: true,  //是否可以overwrite    (默认default true)
-     httpOnly: true, //cookie是否只有服务器端可以访问 httpOnly or not (default true)
-     signed: true,   //签名默认true
-     rolling: false,  //在每次请求时强行设置cookie，这将重置cookie过期时间（默认：false）
-     renew: false,  //(boolean) renew session when session is nearly expired,
-  }
-  app.use(session(CONFIG, app))
+    const relay = new osc.Relay(udpPort, socketPort, {
+        raw: true
+    })
+  })
 
   // router
   app.use(auth.routes()).use(auth.allowedMethods())
   app.use(player.routes()).use(player.allowedMethods())
   app.use(link.routes()).use(link.allowedMethods())
-  app.use(test.routes()).use(test.allowedMethods())
 
   app.use((ctx) => {
     ctx.status = 200
@@ -99,14 +94,8 @@ async function start() {
     nuxt.render(ctx.req, ctx.res)
   })
 
-  // tcp
   app.listen(port, host)
-  websocket.listen(4000, host)
-  // tcp.init()
   udpPort.open()
-
-
-  // console.log(testjson.track.time_signature / testjson.track.time_signature_confidence)
 
   consola.ready({
     message: `Server listening on http://${host}:${port}`,

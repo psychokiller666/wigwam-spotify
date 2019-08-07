@@ -173,7 +173,7 @@ udpPort.on("ready", function () {
     
 })
 
-// udpPort.close()
+udpPort.close()
 
 // Timer with 1000ms (1 second) base interval resolution.
 const timer = new TaskTimer(500)

@@ -15,6 +15,9 @@
                 <h3 class="f5 tl fw4 white mt0 pb1">{{ playback.track_window.current_track.name }} - {{ playback.track_window.current_track.artists[0].name }}</h3>
                 <Progress class="fw4 white mt0 w-100" :duration="playback.duration" :position="playback.position"></Progress>
             </div>
+
+            <button @click='start'>start</button>
+            <button @click='stop'>stop</button>
         </div>
     </div>
 </template>
@@ -222,7 +225,6 @@ export default {
                 this.$store.commit('player/SET_PLAYLOADED', true)
                 // 连接websocket
                 this.$store.dispatch('START_WEBSOCKET')
-
             })
 
             if (this.$webPlaybackSdkProps().playerAutoConnect) {
@@ -237,6 +239,12 @@ export default {
                     resolve(data)
                 })
             })
+        },
+        start () {
+            this.$store.dispatch('osc/REQ_TIMER_START')
+        },
+        stop () {
+            this.$store.dispatch('osc/REQ_TIMER_STOP')
         }
     },
 

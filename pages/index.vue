@@ -29,17 +29,9 @@ export default {
       }
     },
 
-    methods: {
-      requestbeatattime () {
-        this.$axios.get('/link/request-beat-at-time')
-      },
-      forcebeatattime () {
-        this.$axios.put('/link/force-beat-at-time')
-      },
-    },
-
-    mounted () {
-
+    destroyed () {
+      this.$store.dispatch('osc/REQ_TIMER_STOP')
+      this.$store.dispatch('STOP_WEBSCOKET')
     }
 }
 </script>
