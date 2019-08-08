@@ -48,6 +48,7 @@ module.exports = {
     '@nuxtjs/auth'
   ],
   axios: {
+    baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:3000/' : 'https://wigwam-spotify.herokuapp.com/',
     retry: {
       retries: 5
     }
@@ -75,7 +76,7 @@ module.exports = {
   env: {
     spotify_clinet_id: process.env.NODE_ENV === 'development' ? '750c898be9b24dc6ab0b10087e802b72' : '750c898be9b24dc6ab0b10087e802b72',
     spotify_clinet_secret: process.env.NODE_ENV === 'development' ? '144103e4d97141a781a09774f1362abe' : '144103e4d97141a781a09774f1362abe',
-    redirct_url: process.env.NODE_ENV === 'development' ? 'http://localhost:3000/callback' : 'http://localhost:3000/callback'
+    redirct_url: process.env.NODE_ENV === 'development' ? 'http://localhost:3000/callback' : 'https://wigwam-spotify.herokuapp.com/callback'
   },
   /*
   ** Build configuration
