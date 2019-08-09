@@ -2,9 +2,6 @@ const consola = require('consola')
 const connmanager = require("tcp-ip-connman")
 const heartBeatFactory = require('heartbeatjs')
 
-const testjson = require('../aroundtheworld.json')
-
-
 //Default TIMEOUT and INTERVAL are from heartbeatjs (https://www.npmjs.com/package/heartbeatjs)
 
 const heartBeat = heartBeatFactory()

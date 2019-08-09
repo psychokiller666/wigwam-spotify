@@ -1,32 +1,24 @@
 import WebSocketAsPromised from 'websocket-as-promised';
 
 export default ({ app }, inject) => {
-  const wsp = new WebSocketAsPromised('ws://localhost:4000/websocket', {
+  const websocket = new WebSocketAsPromised('ws://localhost:4000/playback', {
     packMessage: data => JSON.stringify(data),
     unpackMessage: data => JSON.parse(data),
     attachRequestId: (data, requestId) => Object.assign({id: requestId}, data), // attach requestId to message as `id` field
     extractRequestId: data => data && data.id,      
   })
 
-
-  wsp.onOpen.addListener(() => {
-    app.store.commit('SET_WEBSCOKET', true)
-  })
-
-  wsp.onClose.addListener(() => {
+  websocket.onError.addListener(event => {
     app.store.commit('SET_WEBSCOKET', false)
-  })
-
-  wsp.onError.addListener(event => {
     console.error(event)
   })
 
-  // wsp.onResponse.addListener(data => console.log(data));
+  websocket.onMessage.addListener(Message => {
+    const message = JSON.parse(Message)
+    if (message.type === 'playback' && Object.keys(message.data).length) {
+      app.store.dispatch('player/PONG_PLAYBACK', message.data)
+    }
+  })
 
-  // wsp.onMessage.addListener(message => console.log(message));
-
-
-
-
-  inject('socketClient', () => wsp)
+  inject('socketClient', () => websocket)
 }

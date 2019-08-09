@@ -1,7 +1,7 @@
 {
   "name": "wigwam-spotify",
   "version": "1.0.0",
-  "description": "使用ableton link协议，使spotinfy可以同步tempo，beat",
+  "description": "使用ableton link协议，osc协议，使spotinfy可以同步tempo，beat",
   "author": "psychokiller",
   "private": true,
   "scripts": {
@@ -21,8 +21,10 @@
     "koa": "^2.6.2",
     "koa-bodyparser": "^4.2.1",
     "koa-logger": "^3.2.1",
+    "koa-route": "^3.2.0",
     "koa-router": "^7.4.0",
     "koa-session": "^5.12.2",
+    "koa-socket-2": "^1.2.0",
     "koa-websocket": "^6.0.0",
     "node-osc": "^4.1.0",
     "node-sass": "^4.12.0",

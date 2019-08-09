@@ -28,10 +28,15 @@ export default {
         return this.$auth.$state.user
       }
     },
+    
+    mounted () {
+      this.$store.dispatch('START_WEBSOCKET')
+      this.$store.dispatch('START_OSC')
+    },
 
     destroyed () {
-      this.$store.dispatch('osc/REQ_TIMER_STOP')
-      this.$store.dispatch('STOP_WEBSCOKET')
+      // this.$store.dispatch('osc/REQ_TIMER_STOP')
+      this.$store.dispatch('STOP_WEBSOCKET')
     }
 }
 </script>

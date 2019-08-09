@@ -11,9 +11,9 @@ module.exports = {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
     ],
-    script: [
-      { src: 'https://sdk.scdn.co/spotify-player.js', async: true}
-    ],
+    // script: [
+    //   { src: 'https://sdk.scdn.co/spotify-player.js', async: true}
+    // ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
@@ -33,11 +33,12 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    { src: '~/plugins/web-socket', mode: 'client' },
+    // { src: '~/plugins/web-socket', mode: 'client' },
     { src: '~/plugins/vue-slider', mode: 'client' },
     { src: '~/plugins/vue-sparklines', mode: 'client' },
-    { src: '~/plugins/spotify', mode: 'client' },
-    { src: '~/plugins/osc', mode: 'client' }
+    // { src: '~/plugins/spotify', mode: 'client' },
+    { src: '~/plugins/osc', mode: 'client' },
+    { src: '~/plugins/web-socket', mode: 'client' }
   ],
   /*
   ** Nuxt.js modules
@@ -82,7 +83,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    vendor: ['~/plugins/vue-slider', '~/plugins/vue-sparklines', '~/plugins/spotify', '~/plugins/osc'],
+    vendor: ['~/plugins/vue-slider', '~/plugins/vue-sparklines', '~/plugins/osc', '~/plugins/web-socket'],
     /*
     ** You can extend webpack config here
     */

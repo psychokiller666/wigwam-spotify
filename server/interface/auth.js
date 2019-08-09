@@ -28,9 +28,9 @@ router.get('/login', async ctx => {
   'playlist-modify-public',
   'playlist-modify-private',
   'user-top-read']
-  let state = ctx.cookies.get('koa:sess.sig')
+  // let state = ctx.cookies.get('koa:sess.sig')
   ctx.body = {
-    redirct: spotifyApi.createAuthorizeURL(scopes, state)
+    redirct: spotifyApi.createAuthorizeURL(scopes)
   }
 })
 
@@ -50,6 +50,7 @@ router.post('/token', async ctx => {
 router.post('/refresh', async ctx => {
   await spotifyApi.refreshAccessToken().then(data => {
     spotifyApi.setAccessToken(data.body.access_token)
+    
     ctx.body = data.body
   }).catch(error => {
     ctx.status = error.statusCode

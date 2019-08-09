@@ -51,39 +51,39 @@ export const actions = {
         commit('SET_PLAYBACK_STATE', value)
         // currentFeatures
         // currentAnalysis
-        if (state.currentFeatures.id != state.playback.track_window.current_track.id && state.axiosLoaded) {
-            dispatch('REQ_FEATURES', {
-                id: state.playback.track_window.current_track.id,
-                type: 'SET_CURRENT_FEATURES'
-            }).then(() => {
-                // 发送bpm
-                this.dispatch('osc/SEND_TEMPO', state.currentFeatures.tempo)
-                this.dispatch('osc/SEND_PAUSE')
-            }).then(() => {
-                dispatch('REQ_ANALYSIS', {
-                    id: state.playback.track_window.current_track.id,
-                    type: 'SET_CURRENT_ANALYSIS'
-                }).then(() => {
-                    // 启动定时器
-                    this.dispatch('osc/REQ_TIMER_START')
-                })
-            })
-        }
+        // if (state.currentFeatures.id != state.playback.track_window.current_track.id && state.axiosLoaded) {
+        //     dispatch('REQ_FEATURES', {
+        //         id: state.playback.track_window.current_track.id,
+        //         type: 'SET_CURRENT_FEATURES'
+        //     }).then(() => {
+        //         // 发送bpm
+        //         this.dispatch('osc/SEND_TEMPO', state.currentFeatures.tempo)
+        //         this.dispatch('osc/SEND_PAUSE')
+        //     }).then(() => {
+        //         dispatch('REQ_ANALYSIS', {
+        //             id: state.playback.track_window.current_track.id,
+        //             type: 'SET_CURRENT_ANALYSIS'
+        //         }).then(() => {
+        //             // 启动定时器
+        //             this.dispatch('osc/REQ_TIMER_START')
+        //         })
+        //     })
+        // }
 
         // nextFeatures
         // nextAnalysis
-        if (!state.playback.track_window.next_tracks.length) return false
-        if (state.nextFeatures.id != state.playback.track_window.next_tracks[0].id && state.axiosLoaded) {
-            dispatch('REQ_FEATURES', {
-                id: state.playback.track_window.next_tracks[0].id,
-                type: 'SET_NEXT_FEATURES'
-            }).then(() => {
-                dispatch('REQ_ANALYSIS', {
-                    id: state.playback.track_window.next_tracks[0].id,
-                    type: 'SET_NEXT_ANALYSIS'
-                })
-            })
-        }
+        // if (!state.playback.track_window.next_tracks.length) return false
+        // if (state.nextFeatures.id != state.playback.track_window.next_tracks[0].id && state.axiosLoaded) {
+        //     dispatch('REQ_FEATURES', {
+        //         id: state.playback.track_window.next_tracks[0].id,
+        //         type: 'SET_NEXT_FEATURES'
+        //     }).then(() => {
+        //         dispatch('REQ_ANALYSIS', {
+        //             id: state.playback.track_window.next_tracks[0].id,
+        //             type: 'SET_NEXT_ANALYSIS'
+        //         })
+        //     })
+        // }
 
         // 暂停播放
         // if (state.playback.paused != this.state.link.playing) {

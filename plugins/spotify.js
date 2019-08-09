@@ -14,7 +14,7 @@ export default ({ app }, inject) => {
             },
             onPlayerLoading: () => {},
             onPlayerWaitingForDevice: (data) => {
-                app.store.dispatch('player/REQ_PLAYER_PLAY', data.device_id)
+                // app.store.dispatch('player/REQ_PLAYER_PLAY', data.device_id)
             },
             onPlayerError: error => {
                 console.error(error)

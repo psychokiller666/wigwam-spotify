@@ -9,7 +9,6 @@ router.get('/getMyCurrentPlaybackState', async ctx => {
     await spotifyApi.getMyCurrentPlaybackState().then(data => {
         ctx.body = data.body
     }).catch(error => {
-        console.log(error)
         ctx.status = error.statusCode
         ctx.body = error
     })
@@ -20,7 +19,6 @@ router.get('/getAudioFeaturesForTrack', async ctx => {
     await spotifyApi.getAudioFeaturesForTrack(id).then(data => {
         ctx.body = data.body
     }).catch(error => {
-        console.log(error)
         ctx.status = error.statusCode
         ctx.body = error
     })
@@ -31,7 +29,6 @@ router.get('/getAudioAnalysisForTrack', async ctx => {
     await spotifyApi.getAudioAnalysisForTrack(id).then(data => {
         ctx.body = data.body
     }).catch(error => {
-        console.log(error)
         ctx.status = error.statusCode
         ctx.body = error
     })
