@@ -27,7 +27,7 @@
     "koa-socket-2": "^1.2.0",
     "koa-websocket": "^6.0.0",
     "node-osc": "^4.1.0",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
     "nuxt-edge": "latest",
     "observable-object-es6": "^1.0.2",
     "observe": "^1.4.1",
